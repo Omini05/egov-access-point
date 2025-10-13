@@ -14,16 +14,294 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          action: string
+          description: string | null
+          id: string
+          timestamp: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          description?: string | null
+          id?: string
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          description?: string | null
+          id?: string
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      departments: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          email: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          citizen_id: string
+          comments: string | null
+          created_at: string | null
+          id: string
+          rating: number | null
+          request_id: string
+        }
+        Insert: {
+          citizen_id: string
+          comments?: string | null
+          created_at?: string | null
+          id?: string
+          rating?: number | null
+          request_id: string
+        }
+        Update: {
+          citizen_id?: string
+          comments?: string | null
+          created_at?: string | null
+          id?: string
+          rating?: number | null
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          method: string | null
+          request_id: string
+          status: string | null
+          transaction_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          method?: string | null
+          request_id: string
+          status?: string | null
+          transaction_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          method?: string | null
+          request_id?: string
+          status?: string | null
+          transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          mobile: string | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          email?: string | null
+          id: string
+          mobile?: string | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          mobile?: string | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      service_requests: {
+        Row: {
+          citizen_id: string
+          date_submitted: string | null
+          id: string
+          operator_id: string | null
+          remarks: string | null
+          service_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          citizen_id: string
+          date_submitted?: string | null
+          id?: string
+          operator_id?: string | null
+          remarks?: string | null
+          service_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          citizen_id?: string
+          date_submitted?: string | null
+          id?: string
+          operator_id?: string | null
+          remarks?: string | null
+          service_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          created_at: string | null
+          department_id: string
+          description: string | null
+          fee: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          processing_time: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          department_id: string
+          description?: string | null
+          fee?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          processing_time?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          department_id?: string
+          description?: string | null
+          fee?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          processing_time?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          department_id: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          department_id?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          department_id?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "citizen"
+        | "data_entry_operator"
+        | "department_admin"
+        | "super_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +428,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "citizen",
+        "data_entry_operator",
+        "department_admin",
+        "super_admin",
+      ],
+    },
   },
 } as const

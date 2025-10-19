@@ -261,6 +261,12 @@ const AdminDashboard = ({ userRole, userId }: AdminDashboardProps) => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div className="flex items-center gap-2 text-sm">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium">Application ID:</span>
+                        <span className="font-mono font-semibold">{request.id}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-sm">
                         <User className="h-4 w-4 text-muted-foreground" />
                         <span className="font-medium">Applicant:</span>
                         <span>{applicant?.name || "Unknown"}</span>

@@ -1,11 +1,39 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Search, Clock, Shield, Building2, Users } from "lucide-react";
+import { FileText, Search, Clock, Shield, Building2, Users, Plus, Pause } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkUserRole();
+  }, []);
+
+  const checkUserRole = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .single();
+        
+        setUserRole(roleData?.role || null);
+      }
+    } catch (error) {
+      console.error("Error checking role:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const features = [
     {
       icon: FileText,
@@ -35,6 +63,121 @@ const Index = () => {
     { name: "Character Certificate", department: "Police", fee: "₹100" },
     { name: "Trade License", department: "Municipal", fee: "₹1,000" }
   ];
+
+  if (!loading && (userRole === "department_admin" || userRole === "super_admin")) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+
+        {/* Admin Hero Section */}
+        <section className="relative bg-gradient-to-br from-primary via-primary to-secondary py-20 text-white overflow-hidden">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center animate-fade-in">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                Department Admin Portal
+              </h1>
+              <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto">
+                Manage services, review applications, and oversee operations
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" variant="secondary" className="text-lg px-8" onClick={() => navigate('/dashboard')}>
+                  View Dashboard
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Admin Quick Actions */}
+        <section className="py-16 bg-background">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
+              Service Management
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/services')}>
+                <CardHeader>
+                  <Plus className="h-12 w-12 mx-auto text-primary mb-4" />
+                  <CardTitle className="text-xl">Add New Service</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-muted-foreground">
+                    Create and publish new government services for citizens
+                  </CardDescription>
+                  <Button className="mt-4 w-full">Add Service</Button>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/services')}>
+                <CardHeader>
+                  <Pause className="h-12 w-12 mx-auto text-secondary mb-4" />
+                  <CardTitle className="text-xl">Manage Services</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-muted-foreground">
+                    Activate or halt existing services as needed
+                  </CardDescription>
+                  <Button variant="outline" className="mt-4 w-full">Manage Services</Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Admin Stats */}
+        <section className="py-16 bg-muted/30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
+              Quick Overview
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="text-center">
+                <CardHeader>
+                  <FileText className="h-10 w-10 mx-auto text-primary mb-2" />
+                  <CardTitle>Applications</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-sm">Review pending applications</p>
+                  <Button variant="link" className="mt-2" onClick={() => navigate('/dashboard')}>
+                    View All →
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center">
+                <CardHeader>
+                  <Building2 className="h-10 w-10 mx-auto text-secondary mb-2" />
+                  <CardTitle>Services</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-sm">Manage department services</p>
+                  <Button variant="link" className="mt-2" onClick={() => navigate('/services')}>
+                    Manage →
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center">
+                <CardHeader>
+                  <Users className="h-10 w-10 mx-auto text-accent mb-2" />
+                  <CardTitle>Citizens</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-sm">View citizen applications</p>
+                  <Button variant="link" className="mt-2" onClick={() => navigate('/dashboard')}>
+                    View →
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">

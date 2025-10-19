@@ -194,6 +194,9 @@ const CitizenDashboard = ({ userId }: CitizenDashboardProps) => {
                         {request.services.departments.name} Department
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
+                        Application ID: <span className="font-mono font-semibold">{request.id}</span>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
                         Applied on: {new Date(request.date_submitted).toLocaleDateString()}
                       </p>
                     </div>

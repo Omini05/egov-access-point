@@ -96,7 +96,7 @@ const Index = () => {
               Service Management
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/services')}>
+              <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/manage-services')}>
                 <CardHeader>
                   <Plus className="h-12 w-12 mx-auto text-primary mb-4" />
                   <CardTitle className="text-xl">Add New Service</CardTitle>
@@ -109,7 +109,7 @@ const Index = () => {
                 </CardContent>
               </Card>
 
-              <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/services')}>
+              <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/manage-services')}>
                 <CardHeader>
                   <Pause className="h-12 w-12 mx-auto text-secondary mb-4" />
                   <CardTitle className="text-xl">Manage Services</CardTitle>
@@ -152,7 +152,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">Manage department services</p>
-                  <Button variant="link" className="mt-2" onClick={() => navigate('/services')}>
+                  <Button variant="link" className="mt-2" onClick={() => navigate('/manage-services')}>
                     Manage →
                   </Button>
                 </CardContent>

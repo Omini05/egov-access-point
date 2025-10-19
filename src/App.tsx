@@ -9,6 +9,7 @@ import Services from "./pages/Services";
 import Dashboard from "./pages/Dashboard";
 import Track from "./pages/Track";
 import Apply from "./pages/Apply";
+import ManageServices from "./pages/ManageServices";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/track" element={<Track />} />
           <Route path="/apply/:serviceId" element={<Apply />} />
+          <Route path="/manage-services" element={<ManageServices />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

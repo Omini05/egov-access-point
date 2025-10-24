@@ -17,7 +17,7 @@ interface ServiceRequest {
     departments: {
       name: string;
     };
-  };
+  } | null;
 }
 
 interface CitizenDashboardProps {
@@ -249,33 +249,65 @@ const CitizenDashboard = ({ userId }: CitizenDashboardProps) => {
             </div>
           ) : (
             <div className="space-y-4">
-              {requests.map((request) => (
-                <div
-                  key={request.id}
-                  className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex items-start space-x-4">
-                    {getStatusIcon(request.status)}
-                    <div>
-                      <h4 className="font-medium text-foreground">
-                        {request.services.name}
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {request.services.departments.name} Department
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Application ID: <span className="font-mono font-semibold">{request.id}</span>
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Applied on: {new Date(request.date_submitted).toLocaleDateString()}
-                      </p>
+              {requests.map((request) => {
+                if (!request.services) {
+                  return (
+                    <div
+                      key={request.id}
+                      className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex items-start space-x-4">
+                        {getStatusIcon(request.status)}
+                        <div>
+                          <h4 className="font-medium text-foreground">
+                            Service Unavailable
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            Service information not found
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Application ID: <span className="font-mono font-semibold">{request.id}</span>
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Applied on: {new Date(request.date_submitted).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        {getStatusBadge(request.status)}
+                      </div>
+                    </div>
+                  );
+                }
+                
+                return (
+                  <div
+                    key={request.id}
+                    className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex items-start space-x-4">
+                      {getStatusIcon(request.status)}
+                      <div>
+                        <h4 className="font-medium text-foreground">
+                          {request.services.name}
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {request.services.departments.name} Department
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Application ID: <span className="font-mono font-semibold">{request.id}</span>
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Applied on: {new Date(request.date_submitted).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      {getStatusBadge(request.status)}
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    {getStatusBadge(request.status)}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </CardContent>
